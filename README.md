@@ -13,17 +13,17 @@ fees, slippage and pool price impact charged by the harness. Nothing real
 is traded.
 
 How it works: the bot stays flat by default. It buys only when the close
-has risen more than 20 bps over the last 15 one-minute bars — a burst of
+has risen more than 15 bps over the last 20 one-minute bars — a burst of
 momentum large enough to matter next to the roughly 26 bps a full-size
 round trip costs — spending 90% of its cash, at most twice per window, and
 only after a 30-bar cooldown since the last exit. A position exits on a
 hard stop 175 bps under its cost, or, once it is 75 bps in profit, on a
-trailing exit 40 bps below the highest close seen while holding it, so a
+trailing exit 30 bps below the highest close seen while holding it, so a
 real move is locked in rather than ridden back down. Weak momentum alone
 never exits: in chop that just pays the spread again and again.
 
 On the frozen dev window shipped with the bounty kit, the local grader
-reports net PnL of about +$16.61 on the $1,000 start, 4 trades, and a
+reports net PnL of about +$17.11 on the $1,000 start, 4 trades, and a
 maximum drawdown of about 1.56%.
 
 - `main.ts` — the bot: Node 22, standard library only (plus the vendored

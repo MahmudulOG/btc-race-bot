@@ -25,11 +25,11 @@
 
 import { runBars } from './vendor/makefun-bars.ts';
 
-const LOOKBACK = 15; // bars of momentum to measure (15 one-minute bars)
-const ENTRY_BPS = 20n; // enter only when 15-bar momentum exceeds this
+const LOOKBACK = 20; // bars of momentum to measure (20 one-minute bars)
+const ENTRY_BPS = 15n; // enter only when 20-bar momentum exceeds this
 const STOP_BPS = 175n; // hard stop: exit at this loss versus cost
 const ARM_BPS = 75n; // trailing exit arms at this profit versus cost
-const TRAIL_BPS = 40n; // then exit on this fall from the peak close
+const TRAIL_BPS = 30n; // then exit on this fall from the peak close
 const SIZE_PCT = 90n; // spend this percent of cash on an entry
 const MAX_ENTRIES = 2; // at most this many separate entries per window
 const COOLDOWN = 30; // bars to wait after an exit before re-entering
