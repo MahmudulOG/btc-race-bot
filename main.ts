@@ -10,6 +10,8 @@
 // - Entry: when flat, the close has risen more than ENTRY_BPS over the last
 //   LOOKBACK bars, we have entries left, and the cooldown since the last exit
 //   has passed, buy with SIZE_PCT of the cash on hand.
+// - Take-profit exit: sell the whole position when it is more than TAKE_BPS
+//   over its cost at a bar close, banking a strong move outright.
 // - Protective exit: sell the whole position when it is more than STOP_BPS
 //   under its cost at a bar close.
 // - Trailing exit: once a position is more than ARM_BPS in profit, sell the
@@ -27,6 +29,7 @@ import { runBars } from './vendor/makefun-bars.ts';
 
 const LOOKBACK = 20; // bars of momentum to measure (20 one-minute bars)
 const ENTRY_BPS = 12n; // enter only when 20-bar momentum exceeds this
+const TAKE_BPS = 130n; // take profit: exit at this gain versus cost
 const STOP_BPS = 175n; // hard stop: exit at this loss versus cost
 const ARM_BPS = 75n; // trailing exit arms at this profit versus cost
 const TRAIL_BPS = 30n; // then exit on this fall from the peak close
@@ -70,6 +73,10 @@ await runBars({
       const value = state.value(SYMBOL, held.qty);
       if (held.cost > 0n && value > 0n) {
         const pnlBps = (value * 10000n) / held.cost - 10000n;
+        if (pnlBps >= TAKE_BPS) {
+          barsSinceExit = 0;
+          return [{ side: 'sell', symbol: SYMBOL, qty: held.qty, max_slippage_bps: MAX_SLIPPAGE_BPS }];
+        }
         if (pnlBps <= -STOP_BPS) {
           barsSinceExit = 0;
           return [{ side: 'sell', symbol: SYMBOL, qty: held.qty, max_slippage_bps: MAX_SLIPPAGE_BPS }];
